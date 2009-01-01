@@ -1,8 +1,9 @@
 class Stevedore
+  
   begin
     require 'stevedore/rsruby'
     Stats = Stevedore::RSRuby
-    puts "Using RSRuby"
+    puts "Stevedore will use RSRuby"
   rescue
     require 'mathstats'
     Stats = Mathstats
@@ -20,38 +21,10 @@ class Stevedore
         Stevedore::ShellR.new.power_test(*args)
       end
     end
-    puts "using Mathstats"
+    puts "Stevedore will use Mathstats"
   end
 
   Array.send :include, Stats
-    
-  def sample_means
-    @samples.map { |s| s.mean }
-  end
-  
-  def sample_standard_deviations
-    @samples.map { |s| s.standard_deviation }
-  end
-  
-  def mean
-    self.flattened_samples.mean
-  end
-  
-  def standard_deviation
-    self.flattened_samples.standard_deviation
-  end
-  
-  def median
-    self.flattened_samples.median
-  end
-  
-  def min
-    self.flattened_samples.min
-  end
-  
-  def max
-    self.flattened_samples.max
-  end
   
 end
 

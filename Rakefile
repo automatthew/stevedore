@@ -1,6 +1,6 @@
 require 'rubygems'
 
-Version = '0.0.1'
+Version = '0.1.0'
 
 task :default => [ :test ]
 
@@ -9,7 +9,7 @@ begin
   require 'echoe'
   Echoe.new('stevedore', Version) do |p|
     p.project = 'stevedore'
-    p.summary = "Benchmarking with lowbrow statistical awareness"
+    p.summary = "Benchmarking with a whiff of statistical awareness"
     p.author = "Matthew King"
     p.email = "automatthew@gmail.com"
     p.ignore_pattern = /^(\.git).+/

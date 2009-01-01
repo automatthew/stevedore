@@ -24,12 +24,6 @@ multi_eval = Stevedore.new "instance_eval &block multiple times" do
   
 end
 
-# multi_eval.go(1,50)
-# 
-# File.open "data.yml", "w" do |f|
-#   f.print multi_eval.samples.flatten.to_yaml
-# end
-
 Stevedore.compare_instances(5, 10)
 puts
 puts
