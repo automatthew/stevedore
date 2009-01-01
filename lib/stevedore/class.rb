@@ -63,7 +63,7 @@ class Stevedore
   def self.recommend_test_size(run_count, sample_size)
     puts "\nRunning trials (#{run_count} runs of #{sample_size}) for each instance.\n\n"
     @instances.each do |instance|
-      print "'#{instance.name}'"
+      puts "'#{instance.name}'"
       instance.go(run_count, sample_size)
       puts "  Mean: %6f" % instance.mean
       puts "  Stddev: %6f" % instance.standard_deviation
