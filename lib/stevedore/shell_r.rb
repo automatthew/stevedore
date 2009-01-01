@@ -1,11 +1,8 @@
 class Stevedore
   class ShellR
 
-    def self.path(val=nil); val ? @path = val : @path ||= `which R`.chomp; end
-
-
-    def initialize
-
+    def self.path(val=nil)
+      val ? @path = val : @path ||= `which R`.chomp
     end
 
     def path
@@ -33,7 +30,7 @@ class Stevedore
 
     def parse(r_output)
       attrs = r_output.scan( /\$([\w\-\.]+)\s+\[\d+\]\s+([\d\.\-e\+]+)/m )
-      r = attrs.map { |k,v| [k.gsub('.','_').to_sym, v.to_f]  }.flatten
+      r = attrs.map { |k,v| [k, v.to_f]  }.flatten
       Hash[*r]
     end
 

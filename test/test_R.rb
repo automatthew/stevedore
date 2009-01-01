@@ -2,16 +2,7 @@ require "#{File.dirname(__FILE__)}/helper.rb"
 
 R = Stevedore::ShellR
 
-describe "Steve.optimal_n" do
-  
-  it "works" do
-    Stevedore.power 0.9
-    Stevedore.delta 0.003
-    Stevedore.sig_level 0.01
-    Stevedore.optimal_n( 0.02 ).should == 1324.272
-  end
-  
-end
+
 
 
 describe "ShellR class" do
@@ -58,13 +49,13 @@ $delta
 [1] 1e-04
 
     TXT
-    @r.parse(output).should ==  { :n => 3821.76, :delta => 1e-04 }
+    @r.parse(output).should ==  { "n" => 3821.76, "delta" => 1e-04 }
   end
   
   it "has a power_test method" do
     options = {:power => 0.9, :delta => 0.003, :sig_level => 0.01, :sd => 0.02}
     res = @r.power_test(options)
-    res.should == { :power => 0.9, :delta => 0.003, :sig_level => 0.01, :sd => 0.02, :n => 1324.272 }
+    res.keys.sort.should == ["delta", "n", "power", "sd", "sig.level"]
   end
   
   

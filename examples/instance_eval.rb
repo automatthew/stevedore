@@ -16,8 +16,6 @@ one_eval = Stevedore.new "One instance eval with several block.call" do
   
 end
 
-
-
 multi_eval = Stevedore.new "instance_eval &block multiple times" do
   
   measure do
@@ -26,10 +24,14 @@ multi_eval = Stevedore.new "instance_eval &block multiple times" do
   
 end
 
-multi_eval.go(1,100)
+# multi_eval.go(1,50)
+# 
+# File.open "data.yml", "w" do |f|
+#   f.print multi_eval.samples.flatten.to_yaml
+# end
 
-File.open "data.yml", "w" do |f|
-  f.print multi_eval.samples.flatten.to_yaml
-end
+Stevedore.compare_instances(5, 10)
+puts
+puts
+Stevedore.recommend_test_size(2, 4)
 
-# Stevedore.compare_instances(10, 50)

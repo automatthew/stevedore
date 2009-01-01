@@ -1,13 +1,9 @@
-require 'mathstats'
 require 'benchmark'
-require 'stevedore/mathstats'
 require 'stevedore/stats'
 require 'stevedore/shell_r'
 
 class Stevedore
-  
-  Stats = Stevedore::MathstatsMethods
-  
+    
   attr_accessor :name, :samples, :delta, :sig_level, :power
   
   def initialize(name, description='', &block)
@@ -19,6 +15,10 @@ class Stevedore
     @name, @description = name, description
     @samples = []
     instance_eval( &block ) if block
+  end
+  
+  def flattened_samples
+     @flat ||= @samples.flatten
   end
   
   def reset
@@ -65,22 +65,7 @@ class Stevedore
   
   def measure(&block); @measure = block; end
   
-  
-
-  
-  # statistics
-  
-  def flattened_samples
-     @flat ||= @samples.flatten
-  end
-  
-
-  
-  def power_test(sd)
-    raise "need to shell out, guy"
-    # self.class.power_test(@r, sd)
-  end
-  
+    
   def report
     puts self.name
     puts "#{run_count} sample runs, #{sample_size} measurements each"
@@ -88,10 +73,6 @@ class Stevedore
     puts "  Standard deviation: #{self.standard_deviation}"
     puts
   end
-  
-  # class << self
-  #   attr_accessor :path_to_R, :power, :sig_level, :delta
-  # end
   
   def self.instances; @instances ||= []; end
   
@@ -126,50 +107,6 @@ class Stevedore
     block ? @after_measure = block : @after_measure
   end
   
-  # Run a small set of samples and use a power test to determine
-  # the optimal run count and sample size.
-  def self.recommend_test_size(run_count, sample_size)
-    raise "broken because we haven't made a way to shell out to R"
-    puts "\nRunning trials (#{run_count} runs of #{sample_size}) for each instance.\n\n"
-    @instances.each do |instance|
-      print "'#{instance.name}'"
-      instance.go(run_count, sample_size)
-      puts "  Mean: %6f" % instance.mean
-      puts "  Stddev: %6f" % instance.standard_deviation
-    end
-    puts
-    worst = @instances.sort_by { |i| i.standard_deviation }.last
-    puts "'#{worst.name}' has the greatest standard deviation,"
-    puts "so we'll use it in the power test to determine optimal run size"
-    rec_size = optimal_n(worst.standard_deviation).to_i
-    # rec_size = power_test(r, worst.standard_deviation )['n'].to_i
-    rec_runs = optimal_n(worst.sample_means.standard_deviation).to_i
-    # rec_runs = power_test(r, r.sd( worst.sample_means) )['n'].to_i
-    puts "Recommendation: #{rec_runs} sample runs of #{rec_size} measurements.\n\n"
-    [rec_runs, rec_size]
-  end
-  
-  def self.optimal_n(stddev);
-    
-    args = { :power => power, :delta => delta, :sig_level => sig_level, :sd => stddev }
-    Stevedore::ShellR.new.power_test(args)[:n]
-  end
-  
-  def self.power_test(r, sd)
-    raise "need to shell out, buddy"
-    if sd < 0.00007
-      warn "Stddev is very small, which makes power.t.test sad. \nSetting stddev to 0.00007 so we can get this done."
-      sd = 0.00007
-    end
-    r.power_t_test :delta => delta, :power => power, :sig_level => sig_level, :sd => sd 
-    expression = %Q{power.t.test(power=0.9, delta=0.0001, sd=#{sd}, sig.level=0.01)["n"]}
-  end
-  
-  def self.shell_R(expression)
-    command = %Q{#{path_to_R} --slave -e '#{expression}'}
-    command
-  end
-  
   def self.compare_instances(run_count, sample_size)
     puts "Measuring #{run_count} runs of #{sample_size} for each instance.\n\n"
     @instances.each do |instance|
@@ -185,6 +122,33 @@ class Stevedore
     end
     puts
   end
+  
+  # Run a small set of samples and use a power test to determine
+  # the optimal run count and sample size.
+  def self.recommend_test_size(run_count, sample_size)
+    puts "\nRunning trials (#{run_count} runs of #{sample_size}) for each instance.\n\n"
+    @instances.each do |instance|
+      print "'#{instance.name}'"
+      instance.go(run_count, sample_size)
+      puts "  Mean: %6f" % instance.mean
+      puts "  Stddev: %6f" % instance.standard_deviation
+    end
+    puts
+    worst = @instances.sort_by { |i| i.standard_deviation }.last
+    puts "'#{worst.name}' has the greatest standard deviation,"
+    puts "so we'll use it in the power test to determine optimal run size"
+    rec_size = optimal_n(worst.standard_deviation).to_i
+    rec_runs = optimal_n(worst.sample_means.standard_deviation).to_i
+    puts "Recommendation: #{rec_runs} sample runs of #{rec_size} measurements.\n\n"
+    [rec_runs, rec_size]
+  end
+  
+  def self.optimal_n(stddev);
+    args = { :power => power, :delta => delta, :sig_level => sig_level, :sd => stddev }
+    Stevedore::Stats.power_test(args)["n"].to_i
+  end
+  
+
   
 end
 

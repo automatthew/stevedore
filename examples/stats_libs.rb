@@ -1,5 +1,4 @@
 %w{ rubygems  }.each { |dep| require dep  }
-require 'rstats'
 require 'mathstats'
 require 'rsruby'
 
@@ -8,13 +7,13 @@ require 'stevedore'
 
 array = YAML.load_file("data.yml")
 
-rstats_sd = Stevedore.new "rstats standard deviation" do
-  
-  measure do
-    array.standard_deviation
-  end
-  
-end
+# rstats_sd = Stevedore.new "rstats standard deviation" do
+#   
+#   measure do
+#     array.standard_deviation
+#   end
+#   
+# end
 
 mathstats = Stevedore.new "mathstats standard deviation" do
   
