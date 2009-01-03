@@ -14,6 +14,7 @@ begin
     p.email = "automatthew@gmail.com"
     p.ignore_pattern = /^(\.git).+/
     p.test_pattern = "test/*.rb"
+    p.runtime_dependencies = [ 'bmarini-mathstats ~> 0.9.1' ]
   end
 rescue
   "(ignored echoe gemification, as you don't have the Right Stuff)"

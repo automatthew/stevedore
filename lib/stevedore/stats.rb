@@ -5,6 +5,7 @@ class Stevedore
     Stats = Stevedore::RSRuby
     puts "Stevedore will use RSRuby"
   rescue
+    gem "bmarini-mathstats"
     require 'mathstats'
     Stats = Mathstats
     module Stats

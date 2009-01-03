@@ -36,6 +36,6 @@ rsruby = Stevedore.new "rsruby standard deviation" do
 end
 
 
-Stevedore.compare_instances(5, 10)
+Stevedore.compare_instances(10, 100)
 
 
