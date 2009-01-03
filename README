@@ -1,54 +1,56 @@
 Stevedore is a tool for performing and comparing sets of benchmarks based on similar setup and teardown needs.  Instances use their class's setup/teardown where available, and you can set or override these methods per instance.
 
 Steve (and his subclasses, naturally) track any instances created and can run a comparison using Steve.compare_instances.  If the R language is available, you can do a power analysis using the data from a trial run to suggest sample sizes and number of runs needed to meet certain figures of statistical reliability.
+  
+Steve uses the rsruby gem, if available, for basic stats and power analysis.  As the rsruby gem uses a C extension, this could be problematic for non-MRI Rubys.  In the absence of rsruby, stevedore uses bmarini-mathstats for the basic stats and attempts to shell out to R for power analysis (i.e. power.t.test)
+  
 
-class StringConcat < Stevedore
-  before_sample do
-    ...
-  end
-  after_sample do
-    ...
-  end
-end
-
-plus = StringConcat.new "Combining strings with +" do
-  measure do
-    10000.times do
-      "supercalifragilisticexpiali" + "docious"
+  class StringConcat < Stevedore
+    before_sample do
+      ...
+    end
+    after_sample do
+      ...
     end
   end
-end
 
-append = StringConcat.new "Combining strings with <<" do
-  measure do
-    10000.times do
-      "supercalifragilisticexpiali" << "docious"
+  plus = StringConcat.new "Combining strings with +" do
+    measure do
+      10000.times do
+        "supercalifragilisticexpiali" + "docious"
+      end
     end
   end
-end
 
-interpolate = StringConcat.new "Combining strings with interpolation" do
-  measure do
-    10000.times do
-      "supercalifragilisticexpiali#{'docious'}"
+  append = StringConcat.new "Combining strings with <<" do
+    measure do
+      10000.times do
+        "supercalifragilisticexpiali" << "docious"
+      end
     end
   end
-end
 
-# 5 sample runs of 50 measurements each
-StringConcat.compare_instances(5, 50) # => putses the following:
+  interpolate = StringConcat.new "Combining strings with interpolation" do
+    measure do
+      10000.times do
+        "supercalifragilisticexpiali#{'docious'}"
+      end
+    end
+  end
 
-Measuring 5 runs of 50 for each instance.
+  # 5 sample runs of 50 measurements each
+  StringConcat.compare_instances(5, 50) # => putses the following:
 
-'Combining strings with +'
-'Combining strings with <<'
-'Combining strings with interpolation'
+  Measuring 5 runs of 50 for each instance.
 
-Name                                         Mean       Stddev      Minimum       Median          Max
------------------------------------------------------------------------------------------------------
-Combining strings with +                 0.045009     0.001820     0.037187     0.045382     0.047974
-Combining strings with <<                0.046706     0.004333     0.040437     0.049487     0.058012
-Combining strings with interpolation     0.033927     0.003079     0.031290     0.031928     0.039957
+  'Combining strings with +'
+  'Combining strings with <<'
+  'Combining strings with interpolation'
+
+  Name                                         Mean       Stddev      Minimum       Median          Max
+  -----------------------------------------------------------------------------------------------------
+  Combining strings with +                 0.045009     0.001820     0.037187     0.045382     0.047974
+  Combining strings with <<                0.046706     0.004333     0.040437     0.049487     0.058012
+  Combining strings with interpolation     0.033927     0.003079     0.031290     0.031928     0.039957
 
 
-This benchmarking tool/toy uses the rsruby gem, if is available, for basic stats and power analysis.  As the rsruby gem uses a C extension, this could be problematic for non-MRI Rubys.  In the absence of rsruby, stevedore uses bmarini-mathstats and attempts to shell out to R for power analysis (i.e. power.t.test)
