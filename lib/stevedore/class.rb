@@ -17,6 +17,9 @@ class Stevedore
     val ? @delta = val : @delta ||= 0.001
   end
   
+  def self.subject(val=nil)
+    @subject ||= val
+  end
   
   def self.before(&block)
     block ? @before = block : @before
@@ -43,7 +46,9 @@ class Stevedore
   end
   
   def self.compare_instances(run_count, sample_size)
-    puts "Measuring #{run_count} runs of #{sample_size} for each instance.\n\n"
+    puts "** #{@subject} **" if @subject
+    puts
+    puts "Measuring #{run_count} runs of #{sample_size} for each instance."
     @instances.each do |instance|
       puts "'#{instance.name}'"
       instance.go(run_count, sample_size)

@@ -3,7 +3,6 @@ class Stevedore
   begin
     require 'stevedore/rsruby'
     Stats = Stevedore::RSRuby
-    puts "Stevedore will use RSRuby"
   rescue
     gem "bmarini-mathstats"
     require 'mathstats'
@@ -22,7 +21,6 @@ class Stevedore
         Stevedore::ShellR.new.power_test(*args)
       end
     end
-    puts "Stevedore will use Mathstats"
   end
 
   Array.send :include, Stats
