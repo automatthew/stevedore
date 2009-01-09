@@ -1,3 +1,4 @@
+require 'fileutils'
 class Stevedore
   
   attr_accessor :name, :description, :samples
@@ -21,6 +22,25 @@ class Stevedore
     @samples = []
     @flattened_samples = []
   end
+  
+  def dump(name)
+    filename = dump_path(name)
+    FileUtils.mkdir_p(File.dirname(filename))
+    File.open filename, "w" do |f|
+      Marshal.dump(@samples, f)
+    end
+  end
+  
+  def load(name)
+    filename = dump_path(name)
+    str = File.read(filename)
+    @samples = Marshal.load(str)
+  end
+  
+  def dump_path(name)
+    "stevedata/#{name}"
+  end
+  
   
   # Blocks for setup and measurement
   
@@ -46,24 +66,26 @@ class Stevedore
       sample = []
       instance_eval( &@before_sample ) if @before_sample
       
-      sample_size.times do
+      print "%2s-  " % (i + 1)
+      sample_size.times do |i|
+        print "\b\b%2s" % i; $stdout.flush
         instance_eval( &@before_measure ) if @before_measure
         sample << Benchmark.realtime do          
           instance_eval( &@measure )
         end
         instance_eval( &@after_measure ) if @after_measure
       end
-      
+      print " "
       instance_eval( &@after_sample ) if @after_sample
       @samples << sample
     end
-    
+    puts
     instance_eval( &@after ) if @after
+    dump(@name)
   end
   
   def report
     puts self.name
-    puts "#{run_count} sample runs, #{sample_size} measurements each"
     puts "  Mean: #{self.mean}"
     puts "  Standard deviation: #{self.standard_deviation}"
     puts

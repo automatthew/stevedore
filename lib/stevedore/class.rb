@@ -46,15 +46,17 @@ class Stevedore
   end
   
   def self.compare_instances(run_count, sample_size)
-    puts "** #{@subject} **" if @subject
     puts
-    puts "Measuring #{run_count} runs of #{sample_size} for each instance."
+    puts "Benchmark: #{@subject}" if @subject
+    puts
+    puts "Measuring #{run_count} runs of #{sample_size} for each test."
     @instances.each do |instance|
-      puts "'#{instance.name}'"
       instance.go(run_count, sample_size)
     end
+    puts
+    puts @subject
     name_size = @instances.map { |i| i.name.size }.max
-    puts "\n%-#{name_size}s %12s %12s %12s %12s %12s" % %w{ Name Mean Stddev Minimum Median Max  }
+    puts "\n%-#{name_size}s %12s %12s %12s %12s %12s" % ["", "Mean", "Stddev", "Minimum", "Median", "Max"]
     puts "-" * (name_size + 5 * 13)
     @instances.each do |instance|
       puts "%-#{name_size}s %12f %12f %12f %12f %12f" % 
