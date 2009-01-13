@@ -51,7 +51,7 @@ class Stevedore
     puts
     puts "Measuring #{run_count} runs of #{sample_size} for each test."
     @instances.each do |instance|
-      instance.go(run_count, sample_size)
+      instance.go(run_count, sample_size) if instance.samples.empty?
     end
     puts
     puts @subject
@@ -62,6 +62,10 @@ class Stevedore
       puts "%-#{name_size}s %12f %12f %12f %12f %12f" % 
         [ instance.name, instance.mean, instance.standard_deviation, instance.min, instance.median, instance.max]
     end
+    n = run_count * sample_size
+    stddev = @instances.map { |i| i.standard_deviation }.max
+    puts
+    puts "Significant delta at current power settings: #{self.calculated_delta(n, stddev)}"
     puts
   end
   
@@ -88,6 +92,17 @@ class Stevedore
   def self.optimal_n(stddev);
     args = { :power => power, :delta => delta, :sig_level => sig_level, :sd => stddev }
     Stevedore::Stats.power_test(args)["n"].to_i
+  end
+  
+  def self.calculated_power(n, d, std)
+    args = { :n => n,  :delta => d, :sig_level => sig_level, :sd => std }
+    puts args.inspect
+    Stevedore::Stats.power_test(args)["power"]
+  end
+  
+  def self.calculated_delta(n, std)
+    args = { :n => n, :power => power, :sig_level => sig_level, :sd => std }
+    Stevedore::Stats.power_test(args)["delta"]
   end
   
 end

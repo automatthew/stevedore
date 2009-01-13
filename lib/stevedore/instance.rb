@@ -68,7 +68,7 @@ class Stevedore
       
       print "%2s-  " % (i + 1)
       sample_size.times do |i|
-        print "\b\b%2s" % i; $stdout.flush
+        print "\b\b\b%3s" % i; $stdout.flush
         instance_eval( &@before_measure ) if @before_measure
         sample << Benchmark.realtime do          
           instance_eval( &@measure )

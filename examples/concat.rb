@@ -2,18 +2,21 @@ require 'rubygems'
 $:.unshift "#{File.dirname(__FILE__)}/../lib"
 require 'stevedore'
 
-
-plus = Steve.new "Combining strings with +" do
-  
-  measure do
-    10000.times do
-      "supercalifragilisticexpiali" + "docious"
-    end
-  end
-  
+class StringConcat < Steve
+  subject "Combining strings"
 end
+# 
+# plus = StringConcat.new "plus" do
+#   
+#   measure do
+#     10000.times do
+#       "supercalifragilisticexpiali" + "docious"
+#     end
+#   end
+#   
+# end
 
-append = Steve.new "Combining strings with <<" do
+append = StringConcat.new "append" do
   
   measure do
     10000.times do
@@ -23,7 +26,7 @@ append = Steve.new "Combining strings with <<" do
   
 end
 
-interpolate = Steve.new "Combining strings with interpolation" do
+interpolate = StringConcat.new "interpolate" do
   
   measure do
     10000.times do
@@ -33,4 +36,8 @@ interpolate = Steve.new "Combining strings with interpolation" do
   
 end
 
-Steve.compare_instances(5, 50)
+append.load("append")
+interpolate.load("interpolate")
+
+StringConcat.compare_instances(8, 64)
+
