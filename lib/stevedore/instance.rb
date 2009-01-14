@@ -66,20 +66,18 @@ class Stevedore
       sample = []
       instance_eval( &@before_sample ) if @before_sample
       
-      print "%2s-  " % (i + 1)
+      print "."; $stdout.flush
       sample_size.times do |i|
-        print "\b\b\b%3s" % i; $stdout.flush
         instance_eval( &@before_measure ) if @before_measure
         sample << Benchmark.realtime do          
           instance_eval( &@measure )
         end
         instance_eval( &@after_measure ) if @after_measure
       end
-      print " "
       instance_eval( &@after_sample ) if @after_sample
       @samples << sample
     end
-    puts
+    puts; $stdout.flush
     instance_eval( &@after ) if @after
     dump(@name)
   end

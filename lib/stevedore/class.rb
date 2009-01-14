@@ -54,14 +54,18 @@ class Stevedore
       instance.go(run_count, sample_size) if instance.samples.empty?
     end
     puts
-    puts @subject
+    puts @subject if @subject
     name_size = @instances.map { |i| i.name.size }.max
     puts "\n%-#{name_size}s %12s %12s %12s %12s %12s" % ["", "Mean", "Stddev", "Minimum", "Median", "Max"]
     puts "-" * (name_size + 5 * 13)
-    @instances.each do |instance|
+    @instances.sort_by { |i| i.mean }.each do |instance|
       puts "%-#{name_size}s %12f %12f %12f %12f %12f" % 
         [ instance.name, instance.mean, instance.standard_deviation, instance.min, instance.median, instance.max]
     end
+    means = @instances.map { |i| i.mean }.sort
+    baseline = means.shift
+    diffs = means.map { |m| m / baseline }
+    puts "Difference in means:  #{diffs.join(', ')}"
     n = run_count * sample_size
     stddev = @instances.map { |i| i.standard_deviation }.max
     puts
