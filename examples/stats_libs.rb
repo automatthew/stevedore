@@ -5,23 +5,8 @@ require 'rsruby'
 $:.unshift "#{File.dirname(__FILE__)}/../lib"
 require 'stevedore'
 
-array = YAML.load_file("data.yml")
-
-# rstats_sd = Stevedore.new "rstats standard deviation" do
-#   
-#   measure do
-#     array.standard_deviation
-#   end
-#   
-# end
-
-mathstats = Stevedore.new "mathstats standard deviation" do
-  
-  measure do
-    Mathstats::Lib.standard_deviation(array)
-  end
-  
-end
+srand(2009)
+array = (1..2000).to_a.map { |i| rand(800.0) }
 
 rsruby = Stevedore.new "rsruby standard deviation" do
   
@@ -35,7 +20,24 @@ rsruby = Stevedore.new "rsruby standard deviation" do
   
 end
 
+mathstats = Stevedore.new "mathstats standard deviation" do
+  
+  measure do
+    Mathstats::Lib.standard_deviation(array)
+  end
+  
+end
 
-Stevedore.compare_instances(10, 100)
+steve_stats = Stevedore.new "steve's own stats" do
+  before do
+    array.extend Stevedore::Stats
+  end
+  measure do
+    array.standard_deviation
+  end
+end
+
+
+Stevedore.compare_instances(5, 25)
 
 
