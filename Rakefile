@@ -1,5 +1,3 @@
-require 'rubygems'
-
 Version = '0.1.0'
 
 task :default => [ :test ]

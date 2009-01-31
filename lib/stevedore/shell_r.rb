@@ -34,7 +34,5 @@ class Stevedore
       Hash[*r]
     end
 
-
-
   end
 end

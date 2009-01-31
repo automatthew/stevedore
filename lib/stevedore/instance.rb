@@ -56,22 +56,23 @@ class Stevedore
   
   def after_measure(&block); @after_measure = block; end
   
+  # Here you do the work you actually want to measure.
   def measure(&block); @measure = block; end
   
   def go(run_count, sample_size)
     reset
     instance_eval( &@before ) if @before
     
-    run_count.times do |i|
+    run_count.times do
       sample = []
       instance_eval( &@before_sample ) if @before_sample
       
       print "."; $stdout.flush
-      sample_size.times do |i|
+      sample_size.times do
         instance_eval( &@before_measure ) if @before_measure
-        sample << Benchmark.realtime do          
-          instance_eval( &@measure )
-        end
+        
+        sample << Benchmark.realtime { instance_eval( &@measure ) }
+        
         instance_eval( &@after_measure ) if @after_measure
       end
       instance_eval( &@after_sample ) if @after_sample

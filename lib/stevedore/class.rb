@@ -66,10 +66,6 @@ class Stevedore
     baseline = means.shift
     diffs = means.map { |m| m / baseline }
     puts "Difference in means:  #{diffs.join(', ')}"
-    n = run_count * sample_size
-    stddev = @instances.map { |i| i.standard_deviation }.max
-    puts
-    puts "Significant delta at current power settings: #{self.calculated_delta(n, stddev)}"
     puts
   end
   
