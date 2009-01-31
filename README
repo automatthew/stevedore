@@ -38,19 +38,20 @@ Steve uses the rsruby gem, if available, for basic stats and power analysis.  As
     end
   end
 
-  # 5 sample runs of 50 measurements each
-  StringConcat.compare_instances(5, 50) # => putses the following:
+  run_count, sample_size = 3, 8
 
-  Measuring 5 runs of 50 for each instance.
+  puts "Measuring #{run_count} runs of #{sample_size} for each test."
+  StringConcat.run([append, interpolate], run_count, sample_size)
+  puts
+  StringConcat.report([append, interpolate]) => putses the following:
+  
+  
+  Combining strings
 
-  'Combining strings with +'
-  'Combining strings with <<'
-  'Combining strings with interpolation'
-
-  Name                                         Mean       Stddev      Minimum       Median          Max
-  -----------------------------------------------------------------------------------------------------
-  Combining strings with +                 0.045009     0.001820     0.037187     0.045382     0.047974
-  Combining strings with <<                0.046706     0.004333     0.040437     0.049487     0.058012
-  Combining strings with interpolation     0.033927     0.003079     0.031290     0.031928     0.039957
+                                Mean       Stddev      Minimum       Median          Max
+  --------------------------------------------------------------------------------------
+  interpolating strings     0.003064     0.002386     0.001356     0.001682     0.008544
+  appending strings         0.009267     0.002933     0.005337     0.010756     0.013299
+  Ratio of means:  3.02487110476993
 
 
