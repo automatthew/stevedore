@@ -27,18 +27,20 @@ class Stevedore
     filename = dump_path(name)
     FileUtils.mkdir_p(File.dirname(filename))
     File.open filename, "w" do |f|
-      Marshal.dump(@samples, f)
+      YAML.dump(@samples, f)
     end
   end
   
   def load(name)
     filename = dump_path(name)
-    str = File.read(filename)
-    @samples = Marshal.load(str)
+    File.open(filename, 'r') do |f|
+      @samples = YAML.load(f)
+    end
   end
   
   def dump_path(name)
-    "stevedata/#{name}"
+    regex = /\W+/
+    "stevedata/#{name.gsub(regex, '_')}"
   end
   
   
