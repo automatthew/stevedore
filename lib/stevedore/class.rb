@@ -21,6 +21,7 @@ class Stevedore
     @subject ||= val
   end
   
+  # Heritable blocks for setup and measurement
   def self.before(&block)
     block ? @before = block : @before
   end

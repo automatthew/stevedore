@@ -27,6 +27,7 @@ class Stevedore
     "stevedata/#{name.gsub(/\W+/, '_')}.yaml"
   end
   
+  # Dump sample data to file in YAML format
   def dump(path=nil)
     filename = ( path || dump_path(@name))
     FileUtils.mkdir_p(File.dirname(filename))
