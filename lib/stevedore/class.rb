@@ -45,14 +45,18 @@ class Stevedore
     block ? @after_measure = block : @after_measure
   end
   
+  def self.run(run_count, sample_size)
+    @instances.each do |instance|
+      instance.go(run_count, sample_size)
+    end
+  end
+  
   def self.compare_instances(run_count, sample_size)
     puts
     puts "Benchmark: #{@subject}" if @subject
     puts
     puts "Measuring #{run_count} runs of #{sample_size} for each test."
-    @instances.each do |instance|
-      instance.go(run_count, sample_size) if instance.samples.empty?
-    end
+    self.run(run_count, sample_size)
     puts
     puts @subject if @subject
     name_size = @instances.map { |i| i.name.size }.max
