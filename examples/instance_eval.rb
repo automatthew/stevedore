@@ -25,7 +25,5 @@ multi_eval = Stevedore.new "instance_eval &block multiple times" do
 end
 
 Stevedore.compare_instances(5, 10)
-puts
-puts
-Stevedore.recommend_test_size(2, 4)
+
 

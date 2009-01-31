@@ -5,18 +5,18 @@ require 'stevedore'
 class StringConcat < Steve
   subject "Combining strings"
 end
-# 
-# plus = StringConcat.new "plus" do
-#   
-#   measure do
-#     10000.times do
-#       "supercalifragilisticexpiali" + "docious"
-#     end
-#   end
-#   
-# end
 
-append = StringConcat.new "append" do
+plus = StringConcat.new "plus" do
+  
+  measure do
+    10000.times do
+      "supercalifragilisticexpiali" + "docious"
+    end
+  end
+  
+end
+
+append = StringConcat.new "appending strings" do
   
   measure do
     10000.times do
@@ -26,7 +26,7 @@ append = StringConcat.new "append" do
   
 end
 
-interpolate = StringConcat.new "interpolate" do
+interpolate = StringConcat.new "interpolating strings" do
   
   measure do
     10000.times do
@@ -36,8 +36,14 @@ interpolate = StringConcat.new "interpolate" do
   
 end
 
-append.load("append")
-interpolate.load("interpolate")
+# append.load("append")
+# interpolate.load("interpolate")
 
-StringConcat.compare_instances(8, 64)
+run_count, sample_size = 3, 8
 
+puts "Measuring #{run_count} runs of #{sample_size} for each test."
+StringConcat.run([append, interpolate], run_count, sample_size)
+puts
+StringConcat.report([append, interpolate])
+append.dump
+interpolate.dump
