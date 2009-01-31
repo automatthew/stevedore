@@ -7,9 +7,9 @@ begin
   require 'echoe'
   Echoe.new('stevedore', Version) do |p|
     p.project = 'stevedore'
-    p.summary = "Benchmarking with a whiff of statistical awareness"
+    p.summary = "Benchmarking framework with some statistickal stuff"
     p.author = "Matthew King"
-    p.email = "automatthew@gmail.com"
+    p.email = "self@automatthew.com"
     p.ignore_pattern = /^(\.git).+/
     p.test_pattern = "test/*.rb"
     p.runtime_dependencies = [ 'bmarini-mathstats ~> 0.9.1' ]
