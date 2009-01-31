@@ -10,7 +10,7 @@ class Stevedore
     @before_measure, @after_measure = klass.before_measure, klass.after_measure
     @before_sample, @after_sample = klass.before_sample, klass.after_sample
     @name, @description = name, description
-    @samples = []
+    @samples = Sample.new
     instance_eval( &block ) if block
   end
   
@@ -19,8 +19,8 @@ class Stevedore
   end
   
   def reset
-    @samples = []
-    @flattened_samples = []
+    @samples = Sample.new
+    @flat = nil
   end
   
   def dump(name)
@@ -66,7 +66,7 @@ class Stevedore
     instance_eval( &@before ) if @before
     
     run_count.times do
-      sample = []
+      sample = Sample.new
       instance_eval( &@before_sample ) if @before_sample
       
       print "."; $stdout.flush
@@ -92,29 +92,19 @@ class Stevedore
     puts
   end
   
-  def mean
-    self.flattened_samples.mean
-  end
+  def mean; @samples.mean; end
   
-  def median
-    self.flattened_samples.median
-  end
+  def median; @samples.median; end
   
-  def min
-    self.flattened_samples.min
-  end
+  def min; @samples.min; end
   
-  def max
-    self.flattened_samples.max
-  end
+  def max; @samples.max; end
   
-  def standard_deviation
-    self.flattened_samples.standard_deviation
-  end
+  def standard_deviation; @samples.standard_deviation; end
   
-  def sample_means
-    @samples.map { |s| s.mean }
-  end
+  def sample_means; @samples.map { |s| s.mean }; end
+  
+  def sample_sds; @samples.map { |s| s.standard_deviation }; end
   
   
   

@@ -6,7 +6,7 @@ describe "Stevedore::Sample" do
   
   before do
     @sample = Sample.new((1..40).to_a)
-    @nested_sample = Sample.new [@sample, @sample, @sample ]
+    @nested_sample = Sample.new [Sample.new((1..40).to_a), Sample.new((1..40).to_a), Sample.new((1..40).to_a) ]
   end
   
   it "a flattened Sample is still a Sample" do

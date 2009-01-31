@@ -1,5 +1,5 @@
 require 'benchmark'
-require 'stevedore/stats'
+require 'stevedore/sample'
 require 'stevedore/shell_r'
 require 'stevedore/class'
 require 'stevedore/instance'
