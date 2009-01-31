@@ -1,4 +1,4 @@
-%w{ rubygems bacon facon }.each { |dep| require dep  }
+%w{ bacon facon }.each { |dep| require dep  }
 
 Bacon.extend Bacon::TestUnitOutput
 Bacon.summary_on_exit
