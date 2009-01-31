@@ -82,7 +82,6 @@ class Stevedore
     end
     puts; $stdout.flush
     instance_eval( &@after ) if @after
-    dump(@name)
   end
   
   def report

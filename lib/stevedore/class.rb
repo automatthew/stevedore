@@ -45,10 +45,34 @@ class Stevedore
     block ? @after_measure = block : @after_measure
   end
   
-  def self.run(run_count, sample_size)
-    @instances.each do |instance|
+  def self.run(instances, run_count, sample_size)
+    instances.each do |instance|
       instance.go(run_count, sample_size)
     end
+  end
+  
+  def self.run_all(run_count, sample_size)
+    run(@instances, run_count, sample_size)
+  end
+  
+  def self.report_all
+    report(@instances)
+  end
+  
+  def self.report(instances)
+    puts @subject if @subject
+    name_size = @instances.map { |i| i.name.size }.max
+    puts "\n%-#{name_size}s %12s %12s %12s %12s %12s" % ["", "Mean", "Stddev", "Minimum", "Median", "Max"]
+    puts "-" * (name_size + 5 * 13)
+    instances.sort_by { |i| i.mean }.each do |instance|
+      puts "%-#{name_size}s %12f %12f %12f %12f %12f" % 
+        [ instance.name, instance.mean, instance.standard_deviation, instance.min, instance.median, instance.max]
+    end
+    means = instances.map { |i| i.mean }.sort
+    baseline = means.shift
+    diffs = means.map { |m| m / baseline }
+    puts "Ratio of means:  #{diffs.join(', ')}"
+    puts
   end
   
   def self.compare_instances(run_count, sample_size)
@@ -56,21 +80,9 @@ class Stevedore
     puts "Benchmark: #{@subject}" if @subject
     puts
     puts "Measuring #{run_count} runs of #{sample_size} for each test."
-    self.run(run_count, sample_size)
+    self.run_all(run_count, sample_size)
     puts
-    puts @subject if @subject
-    name_size = @instances.map { |i| i.name.size }.max
-    puts "\n%-#{name_size}s %12s %12s %12s %12s %12s" % ["", "Mean", "Stddev", "Minimum", "Median", "Max"]
-    puts "-" * (name_size + 5 * 13)
-    @instances.sort_by { |i| i.mean }.each do |instance|
-      puts "%-#{name_size}s %12f %12f %12f %12f %12f" % 
-        [ instance.name, instance.mean, instance.standard_deviation, instance.min, instance.median, instance.max]
-    end
-    means = @instances.map { |i| i.mean }.sort
-    baseline = means.shift
-    diffs = means.map { |m| m / baseline }
-    puts "Difference in means:  #{diffs.join(', ')}"
-    puts
+    self.report_all
   end
   
   # Run a small set of samples and use a power test to determine
