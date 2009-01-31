@@ -24,4 +24,10 @@ describe "Stevedore::Sample" do
     @nested_sample.standard_deviation.to_i.should == 11
   end
   
+  it "can become simple arrays" do
+    @nested_sample.to_a.each do |a|
+      a.class.should == Array
+    end
+  end
+  
 end

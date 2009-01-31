@@ -28,11 +28,16 @@ class Stevedore
     
     attr_reader :flat
     
+    alias :old_to_a :to_a
     alias :old_mean :mean
     alias :old_sd :standard_deviation
     alias :old_median :median
     alias :old_min :min
     alias :old_max :max
+    
+    def to_a
+      self.map { |a| a.is_a?( Sample ) ? a.to_a : a  }
+    end
     
     def mean; (@flat ||= self.flatten).old_mean; end
 

@@ -23,11 +23,15 @@ class Stevedore
     @flat = nil
   end
   
-  def dump(name)
-    filename = dump_path(name)
+  def dump_path(name)
+    "stevedata/#{name.gsub(/\W+/, '_')}.yaml"
+  end
+  
+  def dump(path=nil)
+    filename = ( path || dump_path(@name))
     FileUtils.mkdir_p(File.dirname(filename))
     File.open filename, "w" do |f|
-      YAML.dump(@samples, f)
+      YAML.dump(@samples.to_a, f)
     end
   end
   
@@ -36,11 +40,6 @@ class Stevedore
     File.open(filename, 'r') do |f|
       @samples = YAML.load(f)
     end
-  end
-  
-  def dump_path(name)
-    regex = /\W+/
-    "stevedata/#{name.gsub(regex, '_')}"
   end
   
   
