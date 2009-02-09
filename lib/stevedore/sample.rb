@@ -1,8 +1,7 @@
 begin
   require 'stevedore/rsruby'
   Stats = Stevedore::RSRuby
-  puts "Using RSRuby"
-rescue 
+rescue LoadError
   require 'stevedore/stats'
 end
 
