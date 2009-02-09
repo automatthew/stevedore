@@ -31,15 +31,17 @@ class Stevedore
   def dump(path=nil)
     filename = ( path || dump_path(@name))
     FileUtils.mkdir_p(File.dirname(filename))
+    data = {}
+    @samples.each_with_index { |s, i| data[i] = s.to_a }
     File.open filename, "w" do |f|
-      YAML.dump(@samples.to_a, f)
+      ::YAML.dump(data, f)
     end
   end
   
   def load(name)
     filename = dump_path(name)
     File.open(filename, 'r') do |f|
-      @samples = YAML.load(f)
+      @samples = ::YAML.load(f)
     end
   end
   
