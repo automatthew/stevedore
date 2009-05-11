@@ -12,7 +12,10 @@ begin
     p.email = "self@automatthew.com"
     p.ignore_pattern = /^(\.git).+/
     p.test_pattern = "test/*.rb"
+    p.runtime_dependencies = ["ruport"]
   end
-rescue
-  "(ignored echoe gemification, as you don't have the Right Stuff)"
+rescue LoadError
+  puts "(ignored echoe gemification, as you don't have the Right Stuff)"
 end
+
+

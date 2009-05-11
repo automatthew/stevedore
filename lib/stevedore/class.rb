@@ -1,3 +1,4 @@
+require 'ruport'
 class Stevedore
   
   def self.instances; @instances ||= []; end
@@ -61,19 +62,21 @@ class Stevedore
   end
   
   def self.report(instances)
-    puts @subject if @subject
-    name_size = @instances.map { |i| i.name.size }.max
-    puts "\n%-#{name_size}s %12s %12s %12s %12s %12s" % ["", "Mean", "Stddev", "Minimum", "Median", "Max"]
-    puts "-" * (name_size + 5 * 13)
-    instances.sort_by { |i| i.mean }.each do |instance|
-      puts "%-#{name_size}s %12f %12f %12f %12f %12f" % 
-        [ instance.name, instance.mean, instance.standard_deviation, instance.min, instance.median, instance.max]
+    table = Ruport::Data::Table.new :column_names => %w{ desc Mean ratio Stddev Min Median Max }, :alignment => :right
+    feeder = Ruport::Data::Feeder.new(table)
+    feeder.transform do |r|
+      r.attributes.each do |k|
+        v = r[k]
+        r[k] = ("%.7f" % v).to_f if v.is_a? Float
+      end
     end
     means = instances.map { |i| i.mean }.sort
-    baseline = means.shift
-    diffs = means.map { |m| m / baseline }
-    puts "Ratio of means:  #{diffs.join(', ')}"
-    puts
+    baseline = means.first
+    instances.sort_by { |i| i.mean }.each do |i|
+      feeder << [ i.name, i.mean, i.mean / baseline, i.standard_deviation, i.min, i.median, i.max]
+    end
+    table.rename_columns "ratio" => "this/fastest", "desc" => "Description"
+    puts table
   end
   
   def self.compare_instances(run_count, sample_size)
@@ -83,7 +86,7 @@ class Stevedore
     puts "Measuring #{run_count} runs of #{sample_size} for each test."
     self.run_all(run_count, sample_size)
     puts
-    self.report_all
+    self.report(@instances)
   end
   
   # Run a small set of samples and use a power test to determine
