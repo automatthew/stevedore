@@ -4,7 +4,7 @@ $:.unshift "#{File.dirname(__FILE__)}/../lib"
 require 'stevedore'
 
 thing = lambda { true }
-n = 10000
+n = 1000
 
 one_eval = Stevedore.new "One instance eval with several block.call" do
   

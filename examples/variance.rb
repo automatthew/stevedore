@@ -60,5 +60,4 @@ for_loop = Variances.new "using for loop" do
   end
 end
 
-Variances.run_all( 8, 500)
-Variances.report_all
+Variances.compare_instances(8, 32)
