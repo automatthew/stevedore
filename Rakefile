@@ -1,21 +1,16 @@
-Version = '0.2.1'
-
-task :default => [ :test ]
-
 begin
-  gem 'echoe', '~>3.0'
-  require 'echoe'
-  Echoe.new('stevedore', Version) do |p|
-    p.project = 'stevedore'
-    p.summary = "Benchmarking framework with some statistickal stuff"
-    p.author = "Matthew King"
-    p.email = "self@automatthew.com"
-    p.ignore_pattern = /^(\.git).+/
-    p.test_pattern = "test/*.rb"
-    p.runtime_dependencies = ["ruport"]
+  require 'jeweler'
+  Jeweler::Tasks.new do |s|
+    s.name = "stevedore"
+    s.summary = "Benchmarking framework with some statistickal stuff"
+    s.email = "self@automatthew.com"
+    s.homepage = "http://github.com/automatthew/stevedore"
+    s.authors = ["Matthew King"]
+    s.files =  FileList["[A-Z]*", "{bin,lib,examples,test}/**/*", 'lib/jeweler/templates/.gitignore']
+    s.test_files = FileList["test/**/*.rb"].exclude("**/setup.rb")
+    s.add_dependency 'ruport'
   end
 rescue LoadError
-  puts "(ignored echoe gemification, as you don't have the Right Stuff)"
+  puts "Jeweler or a dep just isn't in your $:. Try `sudo gem install technicalpickles-jeweler`"
 end
-
 
